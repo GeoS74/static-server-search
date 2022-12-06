@@ -56,6 +56,7 @@ server.on('request', async (request: IncomingMessage, response: ServerResponse):
   }
 });
 
+updateDataBase()
 async function updateDataBase(): Promise<void> {
   try {
     const flist: string[] = await _getFileList(config.repository.path);
@@ -91,7 +92,7 @@ async function _makeData(fpath: string, fname: string): Promise<note> {
   const md: string = await readFile(fpath, { encoding: 'utf8' });
   return {
     title: fname.slice(0, -3),
-    body: md.replace(/[\r\n]/g, ''),
+    body: md.replace(/[\r\n]/g, ' '),
     tags: _getTagList(md),
     hash: createHash('sha256').update(md).digest('hex'),
   };
