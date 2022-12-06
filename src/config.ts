@@ -8,6 +8,6 @@ export default {
     port: process.env.DB_PORT || 9200,
   },
   repository: {
-    path: '../static-server/repo',
+    path: process.env.REPO || '../../static-server/repo',
   },
 };

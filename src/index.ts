@@ -55,12 +55,15 @@ server.on('request', async (request: IncomingMessage, response: ServerResponse):
     response.end(_errorToJSON('internal server error'));
   }
 });
-
+logger.info('start');
+console.log(config);
 updateDataBase()
 async function updateDataBase(): Promise<void> {
   try {
-    const flist: string[] = await _getFileList(config.repository.path);
-
+    const flist: string[] = await _getFileList(path.join(__dirname, '..', config.repository.path));
+    console.log('flist:');
+    console.log(flist);
+    console.log(path.join(__dirname, config.repository.path));
     for (const fname of flist) {
       const fpath: string = path.join(__dirname, '..', config.repository.path, fname);
 
