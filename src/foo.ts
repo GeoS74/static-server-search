@@ -5,15 +5,24 @@ const client = new Client({
   node: `${config.db.host}:${config.db.port}`,
 });
 
-//create index
+
+run()
+  // .then(res => console.log(res))
+  .then(res => console.log(res?.hits?.hits))
+  .catch(error => console.log(error.message))
+
+
+// create index
 // async function run(){
 //   return client.indices.create({
 //     index: 'wiki',
 //     body: {
 //       mappings: {
 //         properties: {
-//           "title": {type: "text"},
-//           "message": {type: "text"},
+//           "title": {type: "text", analyzer: "russian"},
+//           "message": {type: "text", analyzer: "russian", search_analyzer: "russian"},
+//           "tags": {type: "keyword"},
+//           "createdat": {type: "date"},
 //         }
 //       }
 //     }
@@ -57,6 +66,14 @@ const client = new Client({
 // }
 
 
+// delete index
+// async function run(){
+//   return client.indices.delete({
+//     index: 'wiki'
+//   })
+// }
+
+
 
 // обязательно требует указание этих полей, включая id
 // async function run(){
@@ -75,23 +92,38 @@ const client = new Client({
 //   return client.index({
 //     index: 'wiki',
 //     body: {
-//       "title": "Скоро наступает Новый год!"
+//       "title": "Новый год!",
+//       "message": "Съешь этих вкусных булочек и запей чаем.",
+//       "tags": "Новый год!",
+//       "createdat": Date.now()
 //     }
 //   })
 // }
 
 // async function run(){
-//   return client.search({
-//     index: 'wiki'
+//   return client.index({
+//     index: 'wiki',
+//     body: {
+//       "title": "Спорт кар выпей чаю с сахаром",
+//       "message": "Гоночные машины тоже очень быстрые",
+//       "tags": "спорт",
+//       "createdat": Date.now()
+//     }
 //   })
 // }
 
-// delete index
-// async function run(){
-//   return client.indices.delete({
-//     index: 'wiki'
-//   })
-// }
+async function run(){
+  return client.search({
+    index: 'wiki',
+    query: {
+      match: {
+        message: "машины"
+      }
+    }
+  })
+}
+
+
 
 
 // bulk
@@ -145,8 +177,5 @@ const client = new Client({
 // }
 
 
-run()
-  .then(res => console.log(res))
-  // .then(res => console.log(res.hits.hits))
-  .catch(error => console.log(error.message))
+
 
