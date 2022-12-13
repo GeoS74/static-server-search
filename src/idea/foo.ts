@@ -1,52 +1,31 @@
-import { Client } from '@elastic/elasticsearch';
-import config from './config';
+import Func from './func'
+const F: Func = new Func()
 
-const client = new Client({ 
-  node: `${config.db.host}:${config.db.port}`,
-});
-
-
-run()
-  // .then(res => console.log(res))
-  .then(res => console.log(res?.hits?.hits))
-  .catch(error => console.log(error.message))
+// F.indicesCreate('boogy').then(res => console.log(res))
+// F.indicesStats().then(res => console.log(res))
+F.indicesStatsByName('wiki').then(res => console.log(res.indices.wiki))
+F.indicesByName('wiki').then(res => console.log(res))
 
 
-// create index
-// async function run(){
-//   return client.indices.create({
-//     index: 'wiki',
-//     body: {
-//       mappings: {
-//         properties: {
-//           "title": {type: "text", analyzer: "russian"},
-//           "message": {type: "text", analyzer: "russian", search_analyzer: "russian"},
-//           "tags": {type: "keyword"},
-//           "createdat": {type: "date"},
-//         }
-//       }
-//     }
-//   }) 
-// }
 
 
-//get statements by all indeces
-// async function run(){
-//   return client.indices.stats()
-// }
-//get statements indeces by name
-// async function run(){
-//   return client.indices.stats({
-//     index: 'wiki'
-//   })
-// }
 
-//get info indeces by name
-// async function run(){
-//   return client.indices.get({
-//     index: 'wiki'
-//   })
-// }
+// import { Client } from '@elastic/elasticsearch';
+// import config from '../config';
+
+// const client = new Client({ 
+//   node: `${config.db.host}:${config.db.port}`,
+// });
+
+
+// run()
+//   // .then(res => console.log(res))
+//   .then(res => console.log(res?.hits?.hits))
+//   .catch(error => console.log(error.message))
+
+
+
+
 
 
 // get info by field
@@ -112,16 +91,16 @@ run()
 //   })
 // }
 
-async function run(){
-  return client.search({
-    index: 'wiki',
-    query: {
-      match: {
-        message: "машины"
-      }
-    }
-  })
-}
+// async function run(){
+//   return client.search({
+//     index: 'wiki',
+//     query: {
+//       match: {
+//         message: "машины"
+//       }
+//     }
+//   })
+// }
 
 
 
