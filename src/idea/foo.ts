@@ -3,93 +3,32 @@ const F: Func = new Func()
 
 // F.indicesCreate('boogy').then(res => console.log(res))
 // F.indicesStats().then(res => console.log(res))
-F.indicesStatsByName('wiki').then(res => console.log(res.indices.wiki))
-F.indicesByName('wiki').then(res => console.log(res))
+// F.indicesStatsByName('wiki').then(res => console.log(res))
+// F.indicesByName('wiki').then(res => console.log(res))
+
+
+const arr = [
+  // F.indicesCreate(),
+  // F.indicesDelete('wiki'),
+  // F.indicesStats(),
+  // F.indicesStatsByName('wiki'),
+  F.indicesGetFieldMapping('message', 'wiki'),
+  // F.indicesAnalyze("english", "Dogs love the cats"),
+  // F.create(),
+  // F.index('wiki', {message: "Dogs love the cats"}),
+  // F.search('wiki', {message: "тендер мыс"}),
+]
+
+Promise.all(arr)
+  // .then(res => console.log(res[0]['wiki'].mappings.message.mapping.message))
+//.then(res => console.log(res[0].hits.hits))
+  .catch(error => console.log(`Error: ${error.message}`))
 
 
 
 
 
-// import { Client } from '@elastic/elasticsearch';
-// import config from '../config';
 
-// const client = new Client({ 
-//   node: `${config.db.host}:${config.db.port}`,
-// });
-
-
-// run()
-//   // .then(res => console.log(res))
-//   .then(res => console.log(res?.hits?.hits))
-//   .catch(error => console.log(error.message))
-
-
-
-
-
-
-// get info by field
-//если указать индекс будет искать в индексе
-//если нет, то вернёт результат поиска по всем существующим индексам
-//если нет такого поля, вернёт все индексы с пустыми объектами mappings
-// async function run(){
-//   return client.indices.getFieldMapping({
-//     fields: 'title',
-//     index: 'wiki',
-//   })
-// }
-// async function run(){
-//   return client.indices.getFieldMapping({
-//     fields: 'title',
-//   })
-// }
-
-
-// delete index
-// async function run(){
-//   return client.indices.delete({
-//     index: 'wiki'
-//   })
-// }
-
-
-
-// обязательно требует указание этих полей, включая id
-// async function run(){
-//   return client.create({
-//     index: "wiki",
-//     body: {
-//       "age": 36
-//     },
-//     id: "100500"
-//   })
-// }
-
-
-
-// async function run(){
-//   return client.index({
-//     index: 'wiki',
-//     body: {
-//       "title": "Новый год!",
-//       "message": "Съешь этих вкусных булочек и запей чаем.",
-//       "tags": "Новый год!",
-//       "createdat": Date.now()
-//     }
-//   })
-// }
-
-// async function run(){
-//   return client.index({
-//     index: 'wiki',
-//     body: {
-//       "title": "Спорт кар выпей чаю с сахаром",
-//       "message": "Гоночные машины тоже очень быстрые",
-//       "tags": "спорт",
-//       "createdat": Date.now()
-//     }
-//   })
-// }
 
 // async function run(){
 //   return client.search({
