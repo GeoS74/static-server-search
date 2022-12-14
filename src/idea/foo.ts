@@ -1,18 +1,13 @@
 import Func from './func'
 const F: Func = new Func()
 
-// F.indicesCreate('boogy').then(res => console.log(res))
-// F.indicesStats().then(res => console.log(res))
-// F.indicesStatsByName('wiki').then(res => console.log(res))
-// F.indicesByName('wiki').then(res => console.log(res))
-
-
 const arr = [
-  // F.indicesCreate(),
+  // F.indicesCreate('foo'),
   // F.indicesDelete('wiki'),
   // F.indicesStats(),
+  F.indicesGet('wiki')
   // F.indicesStatsByName('wiki'),
-  F.indicesGetFieldMapping('message', 'wiki'),
+  // F.indicesGetFieldMapping('message', 'wiki'),
   // F.indicesAnalyze("english", "Dogs love the cats"),
   // F.create(),
   // F.index('wiki', {message: "Dogs love the cats"}),
@@ -20,9 +15,19 @@ const arr = [
 ]
 
 Promise.all(arr)
+  .then(res => console.log(res[0].wiki?.settings?.index?.routing))
   // .then(res => console.log(res[0]['wiki'].mappings.message.mapping.message))
 //.then(res => console.log(res[0].hits.hits))
   .catch(error => console.log(`Error: ${error.message}`))
+
+
+
+
+
+
+
+
+
 
 
 

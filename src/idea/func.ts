@@ -1,3 +1,5 @@
+import {readFileSync} from 'fs'
+import path from 'path'
 import { Client } from '@elastic/elasticsearch';
 import {
   IndicesCreateResponse,
@@ -16,7 +18,18 @@ export default class Func {
   constructor() {
     this.client = new Client({
       node: `${config.db.host}:${config.db.port}`,
+      auth: {
+        username: 'elastic',
+        password: 'DQJWel6DeCW=-x64YSfu'
+      },
+      tls: {
+        ca: readFileSync(path.join(__dirname, './http_ca.crt')),
+        rejectUnauthorized: false
+      }
     });
+    // this.client = new Client({
+    //   node: `${config.db.host}:${config.db.port}`,
+    // });
   }
 
   async out<T>(func: Promise<T>): Promise<T> {
@@ -39,13 +52,13 @@ export default class Func {
                 type: "text",
                 analyzer: "russian", // указать анализатор
               },
-              message: {
-                type: "text",
-                analyzer: "russian",
-                search_analyzer: "russian", // можно указать разные анализаторы
-              },
-              tags: { type: "keyword" },
-              createdat: { type: "date" },
+            //   message: {
+            //     type: "text",
+            //     analyzer: "russian",
+            //     search_analyzer: "russian", // можно указать разные анализаторы
+            //   },
+            //   tags: { type: "keyword" },
+            //   createdat: { type: "date" },
             }
           }
         }
@@ -106,6 +119,12 @@ export default class Func {
         fields,
         index
       })
+    )
+  }
+
+  async indicesGet(idxName: string){
+    return this.out(
+      this.client.indices.get({index: idxName})
     )
   }
 
