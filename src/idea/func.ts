@@ -20,22 +20,22 @@ export default class Func {
 
   constructor() {
     // v.8.5.2
-    // this.client = new Client({
-    //   node: `${config.db.host}:${config.db.port}`,
-    //   auth: {
-    //     username: 'elastic',
-    //     password: 'DQJWel6DeCW=-x64YSfu'
-    //   },
-    //   tls: {
-    //     ca: readFileSync(path.join(__dirname, './http_ca.crt')),
-    //     rejectUnauthorized: false
-    //   }
-    // });
-
-    // v.7.17.7
     this.client = new Client({
       node: `${config.db.host}:${config.db.port}`,
+      auth: {
+        username: 'elastic',
+        password: 'wLpnmUrccrzboydcs-40'
+      },
+      tls: {
+        ca: readFileSync(path.join(__dirname, './http_ca.crt')),
+        rejectUnauthorized: false
+      }
     });
+
+    // v.7.17.7
+    // this.client = new Client({
+    //   node: `${config.db.host}:${config.db.port}`,
+    // });
   }
 
   async out<T>(func: Promise<T>): Promise<T> {
@@ -61,15 +61,21 @@ export default class Func {
             properties: {
               title: {
                 type: "text",
-                // analyzer: "russian", // указать анализатор
+                analyzer: "russian", // указать анализатор
+                fields: {
+                  keyword: {
+                    type: 'keyword',
+                    ignore_above: 256,
+                  }
+                }
               },
-            //   message: {
-            //     type: "text",
-            //     analyzer: "russian",
-            //     search_analyzer: "russian", // можно указать разные анализаторы
-            //   },
-            //   tags: { type: "keyword" },
-            //   createdat: { type: "date" },
+              message: {
+                type: "text",
+                analyzer: "russian",
+                // search_analyzer: "russian", // можно указать разные анализаторы
+              },
+              tags: { type: "text" },
+              createdat: { type: "date" },
             }
           }
         }
@@ -185,6 +191,16 @@ export default class Func {
   }
 
 
+
+  // мульти поиск
+  async searchMulti(idxName: string, match: {}){
+    return this.out(
+      this.client.search({
+        index: idxName,
+        query: match
+      })
+    )
+  }
 
   //поиск документа
   //https://www.elastic.co/guide/en/elasticsearch/reference/7.16/query-filter-context.html

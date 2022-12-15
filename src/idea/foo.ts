@@ -19,18 +19,39 @@ const arr = [
   // F.indicesGetFieldMapping('title', 'wiki'),
   // F.indicesAnalyze("english", "Dogs love the cats"),
 
-  // F.index('wiki', {title: "привет мир"}),
+  // F.index('wiki', {
+  //   title: "Белый плащ",
+  //   message: "Зонт открылся сразу, не дав намокнуть плащу.",
+  //   tags: ["#раз", "#два"],
+  //   createdat: Date.now(),
+  // }),
+  // F.index('wiki', {
+  //   title: "Чёрный плащ",
+  //   message: "Завтра сегодня было вчера",
+  //   tags: ["#мысли", "#вслуз"],
+  //   createdat: Date.now(),
+  // }),
   // F.create('wiki', "1", {title: "привет мир"}),
 
-  F.searchAll('wiki'),
-  // F.search('wiki', {title: "тендер мыс"}),
+  // F.searchAll('wiki'),
+  // F.search('wiki', {
+  //   "title": "плаща нет",
+  //   "tags": "#раз"
+  // }),
+  F.searchMulti('wiki', {
+    multi_match: {
+      query: 'намокнуть на вслуз',
+      fields: ["message", "tags"]
+    }
+  })
 ]
 
 Promise.all(arr)
   // .then(res => console.log(res))
-  // .then(res => console.log(res[0].wiki.mappings))
-.then(res => console.log(res[0].hits.hits))
+  // .then(res => console.log(res[0].wiki.mappings.properties))
+  .then(res => console.log(res[0].hits.hits))
   .catch(error => console.log(`Error: ${error.message}`))
+  .finally(() => console.log('~ok~'))
 
 
 
@@ -45,18 +66,6 @@ Promise.all(arr)
 
 
 
-
-
-// async function run(){
-//   return client.search({
-//     index: 'wiki',
-//     query: {
-//       match: {
-//         message: "машины"
-//       }
-//     }
-//   })
-// }
 
 
 
