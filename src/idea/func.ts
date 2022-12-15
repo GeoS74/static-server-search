@@ -8,7 +8,10 @@ import {
   IndicesResponseBase,
   WriteResponseBase,
   IndicesAnalyzeResponse,
-  IndicesGetFieldMappingResponse
+  IndicesGetFieldMappingResponse,
+  InfoResponse,
+  IndicesGetMappingResponse,
+  IndicesGetSettingsResponse
 } from '@elastic/elasticsearch/lib/api/types';
 import config from '../config';
 
@@ -16,20 +19,23 @@ export default class Func {
   private client: Client;
 
   constructor() {
-    this.client = new Client({
-      node: `${config.db.host}:${config.db.port}`,
-      auth: {
-        username: 'elastic',
-        password: 'DQJWel6DeCW=-x64YSfu'
-      },
-      tls: {
-        ca: readFileSync(path.join(__dirname, './http_ca.crt')),
-        rejectUnauthorized: false
-      }
-    });
+    // v.8.5.2
     // this.client = new Client({
     //   node: `${config.db.host}:${config.db.port}`,
+    //   auth: {
+    //     username: 'elastic',
+    //     password: 'DQJWel6DeCW=-x64YSfu'
+    //   },
+    //   tls: {
+    //     ca: readFileSync(path.join(__dirname, './http_ca.crt')),
+    //     rejectUnauthorized: false
+    //   }
     // });
+
+    // v.7.17.7
+    this.client = new Client({
+      node: `${config.db.host}:${config.db.port}`,
+    });
   }
 
   async out<T>(func: Promise<T>): Promise<T> {
@@ -38,7 +44,12 @@ export default class Func {
     // .catch(error => console.log(error.message))
   }
 
-
+  //информация о БД
+  async info(): Promise<InfoResponse>{
+    return this.out<InfoResponse>(
+      this.client.info()
+    )
+  }
 
   //создать индекс
   async indicesCreate(idxName: string): Promise<IndicesCreateResponse> {
@@ -50,7 +61,7 @@ export default class Func {
             properties: {
               title: {
                 type: "text",
-                analyzer: "russian", // указать анализатор
+                // analyzer: "russian", // указать анализатор
               },
             //   message: {
             //     type: "text",
@@ -110,6 +121,28 @@ export default class Func {
     )
   }
 
+  // вернуть данные полей документов
+  async indicesGetMapping(idxName?: string): Promise<IndicesGetMappingResponse>{
+    return this.out<IndicesGetMappingResponse>(
+      // this.client.indices.getMapping()
+      //то же самое
+      this.client.indices.getMapping({
+        index: idxName
+      })
+    )
+  }
+
+  // вернуть данные полей документов
+  async indicesGetSettings(idxName?: string): Promise<IndicesGetSettingsResponse>{
+    return this.out<IndicesGetSettingsResponse>(
+      this.client.indices.getSettings()
+      //то же самое
+      // this.client.indices.getSettings({
+      //   index: idxName
+      // })
+    )
+  }
+
   //если указать индекс будет искать в индексе
   //если нет, то вернёт результат поиска по всем существующим индексам
   //если нет такого поля, вернёт все индексы с пустыми объектами mappings
@@ -145,7 +178,8 @@ export default class Func {
     return this.out<WriteResponseBase>(
       this.client.index({
         index: idxName,
-        body: customBody,
+        // body: customBody,
+        document: customBody,
       })
     )
   }
@@ -153,6 +187,7 @@ export default class Func {
 
 
   //поиск документа
+  //https://www.elastic.co/guide/en/elasticsearch/reference/7.16/query-filter-context.html
   async search(idxName: string, customBody: {}) {
     return this.out(
       this.client.search({
@@ -160,6 +195,16 @@ export default class Func {
         query: {
           match: customBody
         }
+      })
+    )
+  }
+  // вывод всех документов в индексе
+  async searchAll(idxName?: string) {
+    return this.out(
+      this.client.search({
+        index: idxName,
+        // size: 3,
+        // from: 2
       })
     )
   }

@@ -1,23 +1,35 @@
 import Func from './func'
 const F: Func = new Func()
 
+/*
+2. создать документ с предварительным созданием индекса 2-мя способами
+*/
+
 const arr = [
-  // F.indicesCreate('foo'),
+  // F.info(),
+  // F.indicesCreate('wiki'),
   // F.indicesDelete('wiki'),
+
+  // F.indicesGetSettings('wiki')
+  // F.indicesGetMapping('wiki')
+  // F.indicesGet('wiki')
+
   // F.indicesStats(),
-  F.indicesGet('wiki')
   // F.indicesStatsByName('wiki'),
-  // F.indicesGetFieldMapping('message', 'wiki'),
+  // F.indicesGetFieldMapping('title', 'wiki'),
   // F.indicesAnalyze("english", "Dogs love the cats"),
-  // F.create(),
-  // F.index('wiki', {message: "Dogs love the cats"}),
-  // F.search('wiki', {message: "тендер мыс"}),
+
+  // F.index('wiki', {title: "привет мир"}),
+  // F.create('wiki', "1", {title: "привет мир"}),
+
+  F.searchAll('wiki'),
+  // F.search('wiki', {title: "тендер мыс"}),
 ]
 
 Promise.all(arr)
-  .then(res => console.log(res[0].wiki?.settings?.index?.routing))
-  // .then(res => console.log(res[0]['wiki'].mappings.message.mapping.message))
-//.then(res => console.log(res[0].hits.hits))
+  // .then(res => console.log(res))
+  // .then(res => console.log(res[0].wiki.mappings))
+.then(res => console.log(res[0].hits.hits))
   .catch(error => console.log(`Error: ${error.message}`))
 
 
